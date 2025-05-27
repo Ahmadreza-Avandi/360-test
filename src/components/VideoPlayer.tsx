@@ -20,7 +20,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onError, aut
   const [controlsVisible, setControlsVisible] = useState(true);
   
   useEffect(() => {
-    const embedUrl = `https://www.aparat.com/video/video/embed/videohash/j753rt8/vt/frame?hd=1&autoplay=1`;
+    const embedUrl = `https://youtu.be/g4dPxurgBfs?si=UgM0cwR75ys6uwa7`;
     
     if (containerRef.current) {
       const iframe = document.createElement('iframe');
