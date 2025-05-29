@@ -27,7 +27,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   
   useEffect(() => {
     // Using a high-quality video URL with autoplay parameter
-    const embedUrl = `https://www.aparat.com/v/y69484d`;
+    const embedUrl = `https://as10.asset.aparat.com/aparat-video/acb586f5bcbb17a711abe2c70ccdffb127922808-720p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjZhNTk3YWUzZjlmODA0MWFiOTgxZWRkNGI3MzJjYTAxIiwiZXhwIjoxNzQ4NTU5Njc5LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.FyzxPOKELLxBBjyPRi79jUSDBDUvX1ONQbyya8RgUiI`;
     
     if (containerRef.current) {
       const iframe = document.createElement('iframe');
