@@ -27,7 +27,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   
   useEffect(() => {
     // Using a high-quality video URL with autoplay parameter
-    const embedUrl = `https://youtu.be/g4dPxurgBfs?si=UgM0cwR75ys6uwa7&autoplay=1&hd=1&modestbranding=1&rel=0`;
+    const embedUrl = `https://www.aparat.com/v/y69484d`;
     
     if (containerRef.current) {
       const iframe = document.createElement('iframe');
