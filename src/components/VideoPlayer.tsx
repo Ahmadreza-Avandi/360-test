@@ -6,17 +6,11 @@ interface VideoPlayerProps {
   videoUrl: string;
   onError: () => void;
   autoFullscreen?: boolean;
-  autoplay?: boolean;
 }
 
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({ 
-  videoUrl, 
-  onError, 
-  autoFullscreen,
-  autoplay = true
-}) => {
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onError, autoFullscreen }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isPlaying, setIsPlaying] = useState(autoplay);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const { gyroscopeEnabled, toggleGyroscope, hasGyroscopeSupport } = useGyroscope(containerRef);
@@ -26,22 +20,15 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [controlsVisible, setControlsVisible] = useState(true);
   
   useEffect(() => {
-    // Using a high-quality video URL with autoplay parameter
-    const embedUrl = `https://as10.asset.aparat.com/aparat-video/acb586f5bcbb17a711abe2c70ccdffb127922808-720p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjZhNTk3YWUzZjlmODA0MWFiOTgxZWRkNGI3MzJjYTAxIiwiZXhwIjoxNzQ4NTU5Njc5LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.FyzxPOKELLxBBjyPRi79jUSDBDUvX1ONQbyya8RgUiI`;
+    const embedUrl = `https://www.aparat.com/video/video/embed/videohash/j753rt8/vt/frame?hd=1&autoplay=1`;
     
     if (containerRef.current) {
       const iframe = document.createElement('iframe');
       iframe.src = embedUrl;
       iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen";
-      iframe.style.position = 'absolute';
-      iframe.style.top = '0';
-      iframe.style.left = '0';
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.border = 'none';
-      
+      iframe.className = "w-full h-full absolute top-0 left-0";
       iframe.onload = () => {
-        setIsPlaying(autoplay);
+        setIsPlaying(true);
         if (autoFullscreen) {
           handleFullscreenToggle();
         }
@@ -65,7 +52,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         }
       };
     }
-  }, [videoUrl, onError, autoFullscreen, autoplay]);
+  }, [videoUrl, onError, autoFullscreen]);
   
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -136,10 +123,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   }, []);
 
   return (
-    <div className="fixed inset-0 w-screen h-screen bg-black">
+    <div className="w-full max-w-none aspect-video relative">
       <div 
         ref={containerRef}
-        className="w-full h-full relative overflow-hidden"
+        className="w-full h-full relative overflow-hidden bg-black rounded-lg shadow-xl"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -149,7 +136,9 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
           transition: isDragging ? 'none' : 'transform 0.3s ease'
         }}
-      />
+      >
+        {/* Video will be embedded here by useEffect */}
+      </div>
       
       <div 
         className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 ${
@@ -197,6 +186,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         </div>
       </div>
       
+      {/* Mobile touch instructions */}
       <div className={`absolute top-4 left-4 md:left-auto md:right-4 bg-black/60 text-white text-xs md:text-sm px-3 py-2 rounded-full pointer-events-none transition-opacity duration-300 ${
         controlsVisible ? 'opacity-70' : 'opacity-0'
       }`}>

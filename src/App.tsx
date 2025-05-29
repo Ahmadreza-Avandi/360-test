@@ -9,10 +9,10 @@ function App() {
   const videoUrl = 'https://www.aparat.com/v/j753rt8';
   
   useEffect(() => {
-    // Minimal loading time for better UX
+    // Shorter loading time since we want to get to the video quickly
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 500);
+    }, 1000);
     
     return () => clearTimeout(timer);
   }, []);
@@ -23,17 +23,17 @@ function App() {
   };
 
   return (
-    <div className="h-screen w-screen bg-black flex items-center justify-center overflow-hidden">
+    <div className="min-h-screen bg-black flex items-center justify-center">
       {isLoading ? (
         <LoadingScreen />
       ) : hasError ? (
         <ErrorScreen onRetry={() => {
           setHasError(false);
           setIsLoading(true);
-          setTimeout(() => setIsLoading(false), 500);
+          setTimeout(() => setIsLoading(false), 1000);
         }} />
       ) : (
-        <VideoPlayer videoUrl={videoUrl} onError={handleError} autoFullscreen autoplay />
+        <VideoPlayer videoUrl={videoUrl} onError={handleError} autoFullscreen />
       )}
     </div>
   );
