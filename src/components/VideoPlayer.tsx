@@ -26,16 +26,19 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [controlsVisible, setControlsVisible] = useState(true);
   
   useEffect(() => {
-    const embedUrl = `https://youtu.be/g4dPxurgBfs?si=UgM0cwR75ys6uwa7${autoplay ? '&autoplay=1' : ''}`;
+    // Using a high-quality video URL with autoplay parameter
+    const embedUrl = `https://youtu.be/g4dPxurgBfs?si=UgM0cwR75ys6uwa7&autoplay=1&hd=1&modestbranding=1&rel=0`;
     
     if (containerRef.current) {
       const iframe = document.createElement('iframe');
       iframe.src = embedUrl;
       iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen";
-      iframe.className = "w-full h-full absolute top-0 left-0";
-      iframe.style.width = '100vw';
-      iframe.style.height = '100vh';
-      iframe.style.objectFit = 'cover';
+      iframe.style.position = 'absolute';
+      iframe.style.top = '0';
+      iframe.style.left = '0';
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.border = 'none';
       
       iframe.onload = () => {
         setIsPlaying(autoplay);
@@ -133,10 +136,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   }, []);
 
   return (
-    <div className="w-screen h-screen relative">
+    <div className="fixed inset-0 w-screen h-screen bg-black">
       <div 
         ref={containerRef}
-        className="w-full h-full relative overflow-hidden bg-black"
+        className="w-full h-full relative overflow-hidden"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -146,9 +149,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
           transition: isDragging ? 'none' : 'transform 0.3s ease'
         }}
-      >
-        {/* Video will be embedded here by useEffect */}
-      </div>
+      />
       
       <div 
         className={`absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-300 ${
@@ -196,7 +197,6 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         </div>
       </div>
       
-      {/* Mobile touch instructions */}
       <div className={`absolute top-4 left-4 md:left-auto md:right-4 bg-black/60 text-white text-xs md:text-sm px-3 py-2 rounded-full pointer-events-none transition-opacity duration-300 ${
         controlsVisible ? 'opacity-70' : 'opacity-0'
       }`}>
@@ -208,5 +208,3 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     </div>
   );
 };
-
-export { VideoPlayer }
