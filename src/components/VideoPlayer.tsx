@@ -6,11 +6,17 @@ interface VideoPlayerProps {
   videoUrl: string;
   onError: () => void;
   autoFullscreen?: boolean;
+  autoplay?: boolean;
 }
 
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onError, autoFullscreen }) => {
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({ 
+  videoUrl, 
+  onError, 
+  autoFullscreen,
+  autoplay = true
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(autoplay);
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const { gyroscopeEnabled, toggleGyroscope, hasGyroscopeSupport } = useGyroscope(containerRef);
@@ -20,15 +26,19 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onError, aut
   const [controlsVisible, setControlsVisible] = useState(true);
   
   useEffect(() => {
-    const embedUrl = `https://youtu.be/g4dPxurgBfs?si=UgM0cwR75ys6uwa7`;
+    const embedUrl = `https://youtu.be/g4dPxurgBfs?si=UgM0cwR75ys6uwa7${autoplay ? '&autoplay=1' : ''}`;
     
     if (containerRef.current) {
       const iframe = document.createElement('iframe');
       iframe.src = embedUrl;
       iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen";
       iframe.className = "w-full h-full absolute top-0 left-0";
+      iframe.style.width = '100vw';
+      iframe.style.height = '100vh';
+      iframe.style.objectFit = 'cover';
+      
       iframe.onload = () => {
-        setIsPlaying(true);
+        setIsPlaying(autoplay);
         if (autoFullscreen) {
           handleFullscreenToggle();
         }
@@ -52,7 +62,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onError, aut
         }
       };
     }
-  }, [videoUrl, onError, autoFullscreen]);
+  }, [videoUrl, onError, autoFullscreen, autoplay]);
   
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -123,10 +133,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onError, aut
   }, []);
 
   return (
-    <div className="w-full max-w-none aspect-video relative">
+    <div className="w-screen h-screen relative">
       <div 
         ref={containerRef}
-        className="w-full h-full relative overflow-hidden bg-black rounded-lg shadow-xl"
+        className="w-full h-full relative overflow-hidden bg-black"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -198,3 +208,5 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, onError, aut
     </div>
   );
 };
+
+export { VideoPlayer }
